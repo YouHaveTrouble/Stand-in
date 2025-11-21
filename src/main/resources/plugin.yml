@@ -1,0 +1,4 @@
+name: Stand-in
+version: '1.0-SNAPSHOT'
+main: me.youhavetrouble.standin.StandIn
+api-version: '1.21.7'
