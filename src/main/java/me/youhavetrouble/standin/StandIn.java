@@ -1,5 +1,6 @@
 package me.youhavetrouble.standin;
 
+import me.youhavetrouble.standin.stand.StandinInteractionListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -9,12 +10,7 @@ public final class StandIn extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
-
+        getServer().getPluginManager().registerEvents(new StandinInteractionListener(), this);
     }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
 }

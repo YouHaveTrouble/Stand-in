@@ -8,7 +8,7 @@ import io.papermc.paper.registry.data.dialog.input.DialogInput;
 import io.papermc.paper.registry.data.dialog.type.DialogType;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickCallback;
-import net.kyori.adventure.util.TriState;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -30,9 +30,14 @@ public class StandinDialog {
 
         List<DialogInput> inputs = new ArrayList<>();
 
+        String currentName = "";
+        if (armorStand.customName() != null) {
+            currentName = PlainTextComponentSerializer.plainText().serialize(armorStand.name());
+        }
+
         inputs.add(
                 DialogInput.text("name", Component.text("Display name"))
-                        .labelVisible(true)
+                        .initial(currentName)
                         .build()
         );
         inputs.add(
@@ -42,8 +47,20 @@ public class StandinDialog {
         );
 
         inputs.add(
-                DialogInput.bool("onFire", Component.text("On fire"))
-                        .initial(Boolean.TRUE.equals(armorStand.getVisualFire().toBoolean()))
+                DialogInput.bool("basePlate", Component.text("Base plate"))
+                        .initial(armorStand.hasBasePlate())
+                        .build()
+        );
+
+        inputs.add(
+                DialogInput.bool("arms", Component.text("Arms"))
+                        .initial(armorStand.hasArms())
+                        .build()
+        );
+
+        inputs.add(
+                DialogInput.bool("small", Component.text("Small"))
+                        .initial(armorStand.isSmall())
                         .build()
         );
 
@@ -53,8 +70,16 @@ public class StandinDialog {
                     Entity entity = callbackPlayer.getWorld().getEntity(armorStandId);
                     if (!(entity instanceof ArmorStand stand)) return;
                     if (stand.isDead()) return;
+                    String customName = view.getText("name");
+                    if (customName == null || customName.isEmpty()) {
+                        stand.customName(null);
+                    } else {
+                        stand.customName(Component.text(customName));
+                    }
                     stand.setInvisible(Boolean.TRUE.equals(view.getBoolean("invisible")));
-                    stand.setVisualFire(TriState.byBoolean(Boolean.TRUE.equals(view.getBoolean("onFire"))));
+                    stand.setBasePlate(Boolean.TRUE.equals(view.getBoolean("basePlate")));
+                    stand.setArms(Boolean.TRUE.equals(view.getBoolean("arms")));
+                    stand.setSmall(Boolean.TRUE.equals(view.getBoolean("small")));
                 }, ClickCallback.Options.builder().lifetime(Duration.ofHours(1)).uses(1).build())
         ).build();
 
