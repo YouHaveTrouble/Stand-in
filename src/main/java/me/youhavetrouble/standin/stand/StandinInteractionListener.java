@@ -21,7 +21,7 @@ public class StandinInteractionListener implements Listener {
         if (entity == null) return false;
         if (!player.isOnline()) return false;
 
-        if (entity instanceof ArmorStand armorStand) {
+        if (entity instanceof ArmorStand armorStand && player.hasPermission("standin.edit.armor_stand")) {
             StandinDialog.openArmorStandDialog(player, armorStand);
             return true;
         }
