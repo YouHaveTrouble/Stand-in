@@ -1,11 +1,16 @@
 package me.youhavetrouble.standin.converter;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 
 public interface EntityConverter<F extends Entity, T extends Entity> {
 
     Class<F> entityFrom();
+
+    @NotNull EntityType entityFromType();
+
+    @NotNull EntityType entityToType();
 
     Class<T> entityTo();
 

@@ -23,7 +23,12 @@ import java.util.*;
 @SuppressWarnings("UnstableApiUsage")
 public abstract class EntityHandler<E extends Entity> {
 
+    public final Class<E> clazz;
     private final Set<EntityConverter<E, ?>> possibleConverters = new HashSet<>();
+
+    public EntityHandler(Class<E> clazz) {
+        this.clazz = clazz;
+    }
 
     /**
      * Get the classes of entities this entity can convert into. Conversion can be lossy.
@@ -56,16 +61,28 @@ public abstract class EntityHandler<E extends Entity> {
     public final @Nullable Dialog conversionDialog(@NotNull Player player, E entity) {
         if (entity.isDead()) return null;
         if (possibleConverters.isEmpty()) return null;
-
+        if (!canUseAction(player, entity, EntityAction.CHANGE_TYPE)) return null;
         UUID entityId = entity.getUniqueId();
         UUID playerId = player.getUniqueId();
         Class<? extends Entity> entityClass = entity.getClass();
 
         List<SingleOptionDialogInput.OptionEntry> entityEntries = new ArrayList<>();
 
-        entityEntries.add(SingleOptionDialogInput.OptionEntry.create(entityClass.getName(), Component.text(entityClass.getName()), true));
+        entityEntries.add(
+                SingleOptionDialogInput.OptionEntry.create(
+                        entity.getType().toString(),
+                        Component.translatable(entity.getType().translationKey(), entity.getType().toString()),
+                        true
+                )
+        );
         for (EntityConverter<?, ?> converter : possibleConverters) {
-            entityEntries.add(SingleOptionDialogInput.OptionEntry.create(converter.entityTo().getName(), Component.text(converter.entityTo().getName()), false));
+            entityEntries.add(
+                    SingleOptionDialogInput.OptionEntry.create(
+                            converter.entityTo().getName(),
+                            Component.translatable(converter.entityToType().translationKey()),
+                            false
+                    )
+            );
         }
 
         List<DialogInput> inputs = List.of(
@@ -84,6 +101,7 @@ public abstract class EntityHandler<E extends Entity> {
                     if (callbackEntity == null || callbackEntity.isDead()) return;
                     if (!callbackEntity.getClass().equals(entityClass)) return;
                     E existing = (E) callbackEntity;
+                    if (!canUseAction(callbackPlayer, existing, EntityAction.CHANGE_TYPE)) return;
                     String newEntityType = view.getText("entity_type");
                     if (newEntityType == null) return;
                     if (newEntityType.equals(existing.getClass().getName())) return; // skip if the class is the same
@@ -114,6 +132,23 @@ public abstract class EntityHandler<E extends Entity> {
     }
 
     /**
+     * Checks if player can execute given action for the entity. This is checked on opening dialogs and on executing
+     * callbacks.
+     * @param player player executing action
+     * @param entity entity action is supposed to be used on
+     * @param action action to b taken
+     * @return Boolean representing the allowance state of the action
+     */
+    public boolean canUseAction(@NotNull Player player, E entity, EntityAction action) {
+        String entityTypeName = entity.getType().toString().toLowerCase(Locale.ENGLISH);
+        return switch (action) {
+            case EDIT -> player.hasPermission("standin.edit." + entityTypeName);
+            case CHANGE_TYPE -> player.hasPermission("standin.change_type." + entityTypeName);
+            default -> false;
+        };
+    }
+
+    /**
      * Open a dialog allowing to edit properties of the entity
      *
      * @param player player the dialog is meant for
@@ -122,6 +157,11 @@ public abstract class EntityHandler<E extends Entity> {
      */
     public Dialog editDialog(@NotNull Player player, E entity) {
         return null;
+    }
+
+    public enum EntityAction {
+        EDIT,
+        CHANGE_TYPE,
     }
 
 }

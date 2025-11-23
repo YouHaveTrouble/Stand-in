@@ -2,6 +2,7 @@ package me.youhavetrouble.standin.converter;
 
 import me.youhavetrouble.standin.StandIn;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mannequin;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +17,16 @@ public class ArmorStandToMannequinConverter implements EntityConverter<ArmorStan
     @Override
     public Class<Mannequin> entityTo() {
         return Mannequin.class;
+    }
+
+    @Override
+    public @NotNull EntityType entityFromType() {
+        return EntityType.ARMOR_STAND;
+    }
+
+    @Override
+    public @NotNull EntityType entityToType() {
+        return EntityType.MANNEQUIN;
     }
 
     @Override
