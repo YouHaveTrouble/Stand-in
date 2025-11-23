@@ -64,6 +64,11 @@ public class MannequinHandler extends EntityHandler<Mannequin> {
                         .build()
         );
         inputs.add(
+                DialogInput.bool("invulnerable", Component.text("Invulnerable"))
+                        .initial(mannequin.isInvulnerable())
+                        .build()
+        );
+        inputs.add(
                 DialogInput.bool("gravity", Component.text("Gravity"))
                         .initial(mannequin.hasGravity())
                         .build()
@@ -88,6 +93,7 @@ public class MannequinHandler extends EntityHandler<Mannequin> {
                     mann.setImmovable(Boolean.TRUE.equals(view.getBoolean("immovable")));
                     mann.setVelocity(mann.getVelocity().zero());
                     mann.setGravity(Boolean.TRUE.equals(view.getBoolean("gravity")));
+                    mann.setInvulnerable(Boolean.TRUE.equals(view.getBoolean("invulnerable")));
                     try {
                         String newProfileName = view.getText("profile");
                         if (newProfileName == null || newProfileName.isBlank()) {
