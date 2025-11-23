@@ -6,7 +6,7 @@
 
     <groupId>me.youhavetrouble.standin</groupId>
     <artifactId>Stand-in</artifactId>
-    <version>0.1.0</version>
+    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <name>Stand-in</name>
@@ -14,6 +14,7 @@
     <properties>
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <revision>0.1.0</revision>
     </properties>
 
     <build>
