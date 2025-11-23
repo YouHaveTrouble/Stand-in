@@ -4,6 +4,7 @@ on:
     branches: [ master ]
     paths:
       - "src/**"
+      - "pom.xml"
   workflow_dispatch:
 
 jobs:
