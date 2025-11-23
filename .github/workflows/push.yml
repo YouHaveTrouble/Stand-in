@@ -1,0 +1,29 @@
+name: Build commit
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - "src/**"
+  workflow_dispatch:
+
+jobs:
+  build-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: 'temurin'
+      - name: Set short commit hash
+        run: fullCommit=${{ github.sha }} && echo "SHORT_SHA=${fullCommit:0:8}" >> $GITHUB_ENV
+      - name: Build with Maven
+        run: mvn -B clean package --file pom.xml -Drevision=${{ github.ref_name }}-${SHORT_SHA}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact
+          path: 'target/Stand-in-*.jar'
