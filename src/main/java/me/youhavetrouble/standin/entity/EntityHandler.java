@@ -12,6 +12,8 @@ import me.youhavetrouble.standin.converter.EntityConverter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickCallback;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -140,6 +142,12 @@ public abstract class EntityHandler<E extends Entity> {
      * @return Boolean representing the allowance state of the action
      */
     public boolean canUseAction(@NotNull Player player, E entity, EntityAction action) {
+       AttributeInstance rangeInstance = player.getAttribute(Attribute.ENTITY_INTERACTION_RANGE);
+       if (rangeInstance == null) return false;
+       double range = rangeInstance.getValue() + 0.5;
+       if (player.getWorld() != entity.getWorld() || player.getLocation().distanceSquared(entity.getLocation()) > range * range) {
+           return false;
+       }
         String entityTypeName = entity.getType().toString().toLowerCase(Locale.ENGLISH);
         return switch (action) {
             case EDIT -> player.hasPermission("standin.edit." + entityTypeName);
