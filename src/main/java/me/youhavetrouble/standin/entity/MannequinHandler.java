@@ -85,11 +85,12 @@ public class MannequinHandler extends EntityHandler<Mannequin> {
                     if (!canUseAction(callbackPlayer, mann, EntityAction.EDIT)) return;
                     if (mann.isDead()) return;
                     String newName = view.getText("name");
-                    Component displayName = null;
-                    if (newName != null) {
-                        displayName = MiniMessage.miniMessage().deserialize(newName);
+                    if (newName != null && !newName.isBlank()) {
+                        Component displayName = MiniMessage.miniMessage().deserialize(newName);
+                        mann.customName(displayName);
+                    } else {
+                        mann.customName(null);
                     }
-                    mann.customName(displayName);
                     mann.setImmovable(Boolean.TRUE.equals(view.getBoolean("immovable")));
                     mann.setVelocity(mann.getVelocity().zero());
                     mann.setGravity(Boolean.TRUE.equals(view.getBoolean("gravity")));
