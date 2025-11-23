@@ -1,18 +1,17 @@
 package me.youhavetrouble.standin.converter;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 
 public interface EntityConverter<F extends Entity, T extends Entity> {
 
-    Class<F> entityFrom();
+    NamespacedKey PLAYER_PROFILE_KEY = new NamespacedKey("stand-in", "player-profile");
 
-    @NotNull EntityType entityFromType();
+    @NotNull EntityType entityFrom();
 
-    @NotNull EntityType entityToType();
-
-    Class<T> entityTo();
+    @NotNull EntityType entityTo();
 
     /**
      * Spawn the new entity in the old entity's spot.

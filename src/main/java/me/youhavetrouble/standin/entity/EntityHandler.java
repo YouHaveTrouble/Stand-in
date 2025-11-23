@@ -40,7 +40,7 @@ public abstract class EntityHandler<E extends Entity> {
     public final Set<Class<? extends Entity>> getPossibleConversions() {
         Set<Class<? extends Entity>> classes = new HashSet<>();
         for (EntityConverter<E, ?> converter : possibleConverters) {
-            classes.add(converter.entityTo());
+            classes.add(converter.entityTo().getEntityClass());
         }
         return Collections.unmodifiableSet(classes);
     }
@@ -80,8 +80,8 @@ public abstract class EntityHandler<E extends Entity> {
         for (EntityConverter<?, ?> converter : possibleConverters) {
             entityEntries.add(
                     SingleOptionDialogInput.OptionEntry.create(
-                            converter.entityTo().getName(),
-                            Component.translatable(converter.entityToType().translationKey()),
+                            converter.entityTo().toString(),
+                            Component.translatable(converter.entityTo().translationKey()),
                             false
                     )
             );
@@ -109,7 +109,7 @@ public abstract class EntityHandler<E extends Entity> {
                     if (newEntityType.equals(existing.getClass().getName())) return; // skip if the class is the same
                     EntityConverter<E, ?> foundConverter = null;
                     for (EntityConverter<E, ?> converter : possibleConverters) {
-                        if (!newEntityType.equals(converter.entityTo().getName())) continue;
+                        if (!newEntityType.equals(converter.entityTo().toString())) continue;
                         foundConverter = converter;
                         break;
                     }

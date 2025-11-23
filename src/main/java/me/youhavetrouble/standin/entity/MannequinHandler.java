@@ -1,5 +1,6 @@
 package me.youhavetrouble.standin.entity;
 
+import io.papermc.paper.datacomponent.item.ResolvableProfile;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.data.dialog.ActionButton;
 import io.papermc.paper.registry.data.dialog.DialogBase;
@@ -43,10 +44,28 @@ public class MannequinHandler extends EntityHandler<Mannequin> {
         if (customName != null) {
             name = PlainTextComponentSerializer.plainText().serialize(customName);
         }
-
         inputs.add(
                 DialogInput.text("name", Component.text("Name"))
                         .initial(name)
+                        .build()
+        );
+        String profileName = "";
+        if (mannequin.getProfile().name() != null) {
+            profileName = mannequin.getProfile().name();
+        }
+        inputs.add(
+                DialogInput.text("profile", Component.text("Skin Profile (Mojang Username)"))
+                        .initial(profileName)
+                        .build()
+        );
+        inputs.add(
+                DialogInput.bool("immovable", Component.text("Immovable"))
+                        .initial(mannequin.isImmovable())
+                        .build()
+        );
+        inputs.add(
+                DialogInput.bool("gravity", Component.text("Gravity"))
+                        .initial(mannequin.hasGravity())
                         .build()
         );
 
@@ -66,6 +85,18 @@ public class MannequinHandler extends EntityHandler<Mannequin> {
                         displayName = MiniMessage.miniMessage().deserialize(newName);
                     }
                     mann.customName(displayName);
+                    mann.setImmovable(Boolean.TRUE.equals(view.getBoolean("immovable")));
+                    mann.setVelocity(mann.getVelocity().zero());
+                    mann.setGravity(Boolean.TRUE.equals(view.getBoolean("gravity")));
+                    try {
+                        String newProfileName = view.getText("profile");
+                        if (newProfileName == null || newProfileName.isBlank()) {
+                            newProfileName = null;
+                        }
+                        mann.setProfile(ResolvableProfile.resolvableProfile().name(newProfileName).build());
+                    } catch (IllegalArgumentException e) {
+                        callbackPlayer.sendRichMessage("<red>Profile name not updated: invalid username.");
+                    }
                 }, ClickCallback.Options.builder().lifetime(Duration.ofMinutes(5)).uses(1).build())
         ).build();
         actions.add(saveButton);

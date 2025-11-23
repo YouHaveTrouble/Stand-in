@@ -13,7 +13,6 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("UnstableApiUsage")
 public final class StandIn extends JavaPlugin {
 
     public static final NamespacedKey KEY = new NamespacedKey("stand-in", "stand-in");
