@@ -21,9 +21,7 @@ Manipulate properties of entities, such as setting player profiles on mannequins
 
 Edit menu can be opened with `shift + right click` on the entity.
 
-## Permissions
-
-- `standin.edit.<entity_type>` - Allows editing specified entity type (only if it's supported.).
+`standin.edit.<entity_type>` - Permission that allows editing specified entity type (only if it's supported.).
 
 ## Future
 
