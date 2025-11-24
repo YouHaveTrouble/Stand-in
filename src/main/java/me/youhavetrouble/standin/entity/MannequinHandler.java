@@ -7,11 +7,11 @@ import io.papermc.paper.registry.data.dialog.DialogBase;
 import io.papermc.paper.registry.data.dialog.action.DialogAction;
 import io.papermc.paper.registry.data.dialog.input.DialogInput;
 import io.papermc.paper.registry.data.dialog.type.DialogType;
+import me.youhavetrouble.standin.converter.EntityConverter;
 import me.youhavetrouble.standin.converter.MannequinToArmorStandConverter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickCallback;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mannequin;
 import org.bukkit.entity.Player;
@@ -39,14 +39,14 @@ public class MannequinHandler extends EntityHandler<Mannequin> {
 
         List<DialogInput> inputs = new ArrayList<>();
 
-        String name = "";
-        Component customName = mannequin.customName();
-        if (customName != null) {
-            name = PlainTextComponentSerializer.plainText().serialize(customName);
+        String name = EntityConverter.getRawEntityName(mannequin);
+        if (name == null) {
+            name = "";
         }
         inputs.add(
                 DialogInput.text("name", Component.text("Name"))
                         .initial(name)
+                        .maxLength(1024)
                         .build()
         );
         String profileName = "";
@@ -91,6 +91,7 @@ public class MannequinHandler extends EntityHandler<Mannequin> {
                     } else {
                         mann.customName(null);
                     }
+                    EntityConverter.saveRawEntityName(mann, newName);
                     mann.setImmovable(Boolean.TRUE.equals(view.getBoolean("immovable")));
                     mann.setVelocity(mann.getVelocity().zero());
                     mann.setGravity(Boolean.TRUE.equals(view.getBoolean("gravity")));
