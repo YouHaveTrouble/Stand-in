@@ -8,6 +8,7 @@ import io.papermc.paper.registry.data.dialog.body.DialogBody;
 import io.papermc.paper.registry.data.dialog.input.DialogInput;
 import io.papermc.paper.registry.data.dialog.input.SingleOptionDialogInput;
 import io.papermc.paper.registry.data.dialog.type.DialogType;
+import me.youhavetrouble.standin.StandIn;
 import me.youhavetrouble.standin.converter.EntityConverter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickCallback;
@@ -170,6 +171,15 @@ public abstract class EntityHandler<E extends Entity> {
     public enum EntityAction {
         EDIT,
         CHANGE_TYPE,
+    }
+
+    /**
+     * Checks if entity is entity transformed by stand-in plugin
+     * @param entity entity to check
+     * @return boolean representing whether entity is a stand-in entity
+     */
+    public static boolean isStandinEntity(@NotNull Entity entity) {
+        return entity.getPersistentDataContainer().has(StandIn.KEY);
     }
 
 }

@@ -1,5 +1,6 @@
 package me.youhavetrouble.standin.converter;
 
+import me.youhavetrouble.standin.StandIn;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.NamespacedKey;
@@ -25,6 +26,11 @@ public interface EntityConverter<F extends Entity, T extends Entity> {
      * @return The spawned entity or null if entity cannot be spawned
      */
     T spawn(@NotNull F from);
+
+    default void markAsTransformed(@NotNull T entity) {
+        PersistentDataContainer pdc = entity.getPersistentDataContainer();
+        pdc.set(StandIn.KEY, PersistentDataType.BYTE, (byte) 1);
+    }
 
     /**
      * MiniMessage serialized entity name
