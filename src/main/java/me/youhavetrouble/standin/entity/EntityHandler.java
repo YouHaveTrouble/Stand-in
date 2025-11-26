@@ -149,7 +149,7 @@ public abstract class EntityHandler<E extends Entity> {
        if (player.getWorld() != entity.getWorld() || player.getLocation().distanceSquared(entity.getLocation()) > range * range) {
            return false;
        }
-        String entityTypeName = entity.getType().toString().toLowerCase(Locale.ENGLISH);
+        String entityTypeName = entity.getType().getKey().value();
         return switch (action) {
             case EDIT -> player.hasPermission("standin.edit." + entityTypeName);
             case CHANGE_TYPE -> player.hasPermission("standin.change_type." + entityTypeName);
