@@ -4,6 +4,10 @@ Stand-in is a plugin all about manipulating entities for visual effects.
 
 ## Features
 
+Only visible armor stands and entities spawned by this plugin can be edited or replaced to prevent conflicts with other
+plugins. You can force the edit by granting `standin.edit-anything` and `standin.convert-anything`. This will allow for
+editing ANY supported entity, including ones spawned by plugins, which may lead to unexpected behavior.
+
 ### Entity replacement
 
 Replace armor stands to other entities such as mannequins and (in the future) display entities.
