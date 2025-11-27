@@ -109,7 +109,7 @@ public class MannequinHandler extends EntityHandler<Mannequin> {
         ).build();
         actions.add(saveButton);
 
-        if (player.hasPermission("standin.change_type.armor_stand")) {
+        if (player.hasPermission("standin.change_type.mannequin")) {
             ActionButton changeTypeButton = ActionButton.builder(Component.text("Change type"))
                     .action(
                             DialogAction.customClick((view, audience) -> {
