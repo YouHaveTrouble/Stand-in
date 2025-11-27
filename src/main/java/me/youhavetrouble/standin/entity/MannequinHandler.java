@@ -6,6 +6,7 @@ import io.papermc.paper.registry.data.dialog.ActionButton;
 import io.papermc.paper.registry.data.dialog.DialogBase;
 import io.papermc.paper.registry.data.dialog.action.DialogAction;
 import io.papermc.paper.registry.data.dialog.input.DialogInput;
+import io.papermc.paper.registry.data.dialog.input.SingleOptionDialogInput;
 import io.papermc.paper.registry.data.dialog.type.DialogType;
 import me.youhavetrouble.standin.converter.EntityConverter;
 import me.youhavetrouble.standin.converter.MannequinToArmorStandConverter;
@@ -15,11 +16,13 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mannequin;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Pose;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -56,6 +59,15 @@ public class MannequinHandler extends EntityHandler<Mannequin> {
         inputs.add(
                 DialogInput.text("profile", Component.text("Skin Profile (Mojang Username)"))
                         .initial(profileName)
+                        .build()
+        );
+        inputs.add(
+                DialogInput.singleOption("pose", Component.text("Pose"),
+                                List.of(
+                                        SingleOptionDialogInput.OptionEntry.create("standing", Component.text("Standing"), mannequin.getPose() == Pose.STANDING),
+                                        SingleOptionDialogInput.OptionEntry.create("fall_flying", Component.text("Fall flying"), mannequin.getPose() == Pose.FALL_FLYING),
+                                        SingleOptionDialogInput.OptionEntry.create("sleeping", Component.text("Sleeping"), mannequin.getPose() == Pose.SLEEPING)
+                                ))
                         .build()
         );
         inputs.add(
@@ -104,6 +116,14 @@ public class MannequinHandler extends EntityHandler<Mannequin> {
                         mann.setProfile(ResolvableProfile.resolvableProfile().name(newProfileName).build());
                     } catch (IllegalArgumentException e) {
                         callbackPlayer.sendRichMessage("<red>Profile name not updated: invalid username.");
+                    }
+                    String poseString = view.getText("pose");
+                    if (poseString != null) {
+                        try {
+                            Pose newPose = Pose.valueOf(poseString.toUpperCase(Locale.ROOT));
+                            mann.setPose(newPose);
+                        } catch (IllegalArgumentException ignored) {
+                        }
                     }
                 }, ClickCallback.Options.builder().lifetime(Duration.ofMinutes(5)).uses(1).build())
         ).build();
