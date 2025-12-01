@@ -1,4 +1,4 @@
 name: Stand-in
-version: '1.0-SNAPSHOT'
+version: '${project.version}'
 main: me.youhavetrouble.standin.StandIn
 api-version: '1.21.7'
