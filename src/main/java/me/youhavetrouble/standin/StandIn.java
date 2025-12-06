@@ -3,6 +3,7 @@ package me.youhavetrouble.standin;
 import me.youhavetrouble.standin.entity.ArmorStandHandler;
 import me.youhavetrouble.standin.entity.EntityHandler;
 import me.youhavetrouble.standin.entity.MannequinHandler;
+import me.youhavetrouble.standin.stand.MiscHandlerListener;
 import me.youhavetrouble.standin.stand.StandinInteractionListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
@@ -46,6 +47,7 @@ public final class StandIn extends JavaPlugin {
         });
 
         getServer().getPluginManager().registerEvents(new StandinInteractionListener(this), this);
+        getServer().getPluginManager().registerEvents(new MiscHandlerListener(), this);
     }
 
     /**
