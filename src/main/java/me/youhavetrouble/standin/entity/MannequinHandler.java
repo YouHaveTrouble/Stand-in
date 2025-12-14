@@ -13,11 +13,14 @@ import me.youhavetrouble.standin.converter.MannequinToArmorStandConverter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickCallback;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mannequin;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Pose;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -27,6 +30,8 @@ import java.util.UUID;
 
 @SuppressWarnings("UnstableApiUsage")
 public class MannequinHandler extends EntityHandler<Mannequin> {
+
+    public static final NamespacedKey DESCRIPTION_KEY = new NamespacedKey("standin", "mannequin_description");
 
     public MannequinHandler() {
         super(Mannequin.class);
@@ -52,6 +57,18 @@ public class MannequinHandler extends EntityHandler<Mannequin> {
                         .maxLength(1024)
                         .build()
         );
+
+        String description = getRawDescription(mannequin);
+        if (description == null) {
+            description = "";
+        }
+        inputs.add(
+                DialogInput.text("description", Component.text("Description"))
+                        .initial(description)
+                        .maxLength(1024)
+                        .build()
+        );
+
         String profileName = "";
         if (mannequin.getProfile().name() != null) {
             profileName = mannequin.getProfile().name();
@@ -104,6 +121,14 @@ public class MannequinHandler extends EntityHandler<Mannequin> {
                         mann.customName(null);
                     }
                     EntityConverter.saveRawEntityName(mann, newName);
+                    String newDescription = view.getText("description");
+                    if (newDescription != null && !newDescription.isBlank()) {
+                        mann.setDescription(MiniMessage.miniMessage().deserialize(newDescription));
+                    } else {
+                        mann.setDescription(null);
+                    }
+                    saveRawDescription(mann, newDescription);
+
                     mann.setImmovable(Boolean.TRUE.equals(view.getBoolean("immovable")));
                     mann.setVelocity(mann.getVelocity().zero());
                     mann.setGravity(Boolean.TRUE.equals(view.getBoolean("gravity")));
@@ -158,6 +183,18 @@ public class MannequinHandler extends EntityHandler<Mannequin> {
                                 1)
                 )
         );
+    }
+
+    public static String getRawDescription(@NotNull Entity entity) {
+        return entity.getPersistentDataContainer().get(DESCRIPTION_KEY, PersistentDataType.STRING);
+    }
+
+    public static void saveRawDescription(@NotNull Mannequin mannequin, @Nullable String description) {
+        if (description == null) {
+            mannequin.getPersistentDataContainer().remove(DESCRIPTION_KEY);
+            return;
+        }
+        mannequin.getPersistentDataContainer().set(DESCRIPTION_KEY, PersistentDataType.STRING, description);
     }
 
 }

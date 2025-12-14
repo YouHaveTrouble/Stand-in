@@ -2,6 +2,7 @@ package me.youhavetrouble.standin.converter;
 
 import io.papermc.paper.datacomponent.item.ResolvableProfile;
 import me.youhavetrouble.standin.StandIn;
+import me.youhavetrouble.standin.entity.MannequinHandler;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mannequin;
@@ -29,6 +30,7 @@ public class ArmorStandToMannequinConverter implements EntityConverter<ArmorStan
             return from.getWorld().spawn(from.getLocation(), Mannequin.class, (mannequin -> {
                 markAsTransformed(mannequin);
                 EntityConverter.saveRawEntityName(mannequin, EntityConverter.getRawEntityName(from));
+                MannequinHandler.saveRawDescription(mannequin, MannequinHandler.getRawDescription(from));
                 mannequin.customName(from.customName());
                 mannequin.setImmovable(!from.canMove());
                 mannequin.setGravity(from.hasGravity());

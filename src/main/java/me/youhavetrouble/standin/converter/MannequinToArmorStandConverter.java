@@ -1,6 +1,8 @@
 package me.youhavetrouble.standin.converter;
 
 import me.youhavetrouble.standin.StandIn;
+import me.youhavetrouble.standin.entity.ArmorStandHandler;
+import me.youhavetrouble.standin.entity.MannequinHandler;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mannequin;
@@ -41,6 +43,10 @@ public class MannequinToArmorStandConverter implements EntityConverter<Mannequin
                 String profileName = from.getProfile().name();
                 if (profileName != null && !profileName.isEmpty()) {
                     pdc.set(EntityConverter.PLAYER_PROFILE_KEY, PersistentDataType.STRING, profileName);
+                }
+                String description = MannequinHandler.getRawDescription(from);
+                if (description != null) {
+                    pdc.set(MannequinHandler.DESCRIPTION_KEY, PersistentDataType.STRING, description);
                 }
             }));
         } catch (IllegalArgumentException e) {
