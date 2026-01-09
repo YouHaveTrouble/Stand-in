@@ -116,8 +116,10 @@ public abstract class EntityHandler<E extends Entity> {
                     }
                     if (foundConverter == null) return;
                     Entity converted = foundConverter.spawn(existing);
-                    if (converted == null) return;
-                    if (!converted.isInWorld()) return;
+                    if (converted == null || !converted.isInWorld()) {
+                        callbackPlayer.sendMessage(Component.text("Failed to convert entity to the new type. Is something blocking spawning new entities?").color(NamedTextColor.RED));
+                        return;
+                    }
                     existing.remove();
                 }, ClickCallback.Options.builder().lifetime(Duration.ofHours(1)).uses(1).build())
         ).build();
