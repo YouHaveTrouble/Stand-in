@@ -33,6 +33,7 @@ public class MannequinToArmorStandConverter implements EntityConverter<Mannequin
                 EntityConverter.saveRawEntityName(armorStand, EntityConverter.getRawEntityName(from));
                 armorStand.setGravity(from.hasGravity());
                 armorStand.setCanMove(!from.isImmovable());
+                armorStand.setCustomNameVisible(from.isCustomNameVisible());
                 for (EquipmentSlot slot : EquipmentSlot.values()) {
                     try {
                         armorStand.setItem(slot, from.getEquipment().getItem(slot));

@@ -102,6 +102,11 @@ public class MannequinHandler extends EntityHandler<Mannequin> {
                         .initial(mannequin.hasGravity())
                         .build()
         );
+        inputs.add(
+                DialogInput.bool("customNameVisible", Component.text("Custom name visible"))
+                        .initial(mannequin.isCustomNameVisible())
+                        .build()
+        );
 
         List<ActionButton> actions = new ArrayList<>();
 
@@ -133,6 +138,7 @@ public class MannequinHandler extends EntityHandler<Mannequin> {
                     mann.setVelocity(mann.getVelocity().zero());
                     mann.setGravity(Boolean.TRUE.equals(view.getBoolean("gravity")));
                     mann.setInvulnerable(Boolean.TRUE.equals(view.getBoolean("invulnerable")));
+                    mann.setCustomNameVisible(Boolean.TRUE.equals(view.getBoolean("customNameVisible")));
                     try {
                         String newProfileName = view.getText("profile");
                         if (newProfileName == null || newProfileName.isBlank()) {
